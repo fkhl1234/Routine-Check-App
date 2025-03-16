@@ -3,19 +3,22 @@ package com.example.myapplication;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import android.widget.Toast;
 
 // SQLiteOpenHelper를 상속받는 MyDatabaseHelper 클래스 생성
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     // db 설정
     private static final String dbName = "Routine.db";  // db 이름
+    private static final String tableName = "routines"; // table 이름
     private static final int dbVersion = 1;  // db 버전
 
     // db 생성 쿼리
     private static final String TABLE_CREATE =
-        "CREATE TABLE IF NOT EXISTS users (" +
+        "CREATE TABLE routines (" +
         "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-        "date DATE, " +
+        "date TEXT, " +
         "routine TEXT);";
 
     // 생성자

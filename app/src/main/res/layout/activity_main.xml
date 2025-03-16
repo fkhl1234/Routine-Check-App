@@ -17,18 +17,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/routinetext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendarView"
-        android:text="Routine"
-        android:textSize="20sp"
-        android:textAlignment="center"
-        />
+<!--    <TextView-->
+<!--        android:id="@+id/routinetext"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/calendarView"-->
+<!--        android:text="Routine"-->
+<!--        android:textSize="20sp"-->
+<!--        android:textAlignment="center"-->
+<!--        />-->
 
+    <ListView
+        android:id="@+id/routineList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calendarView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
