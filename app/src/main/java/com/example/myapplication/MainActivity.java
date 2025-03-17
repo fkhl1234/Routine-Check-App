@@ -28,6 +28,8 @@ import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.myapplication.Item;
+
 public class MainActivity extends AppCompatActivity {
     DatabaseHelper dbhelper; // db 객체
     String selectedDate;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         }); // inset, 여백 설정
 
+
         // db 설정
 
         dbhelper = new DatabaseHelper(this); // db 인스턴스 생성
@@ -57,10 +60,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Database not opened", Toast.LENGTH_SHORT).show();
         } // db 체크
 
-//        List<String> array = new ArrayList<String>();
-//        listChange(array);
-//
-//        long rowId = db.insert("routines", null, routine); // 테스트 데이터 삽입
 
         // 캘린더 설정
 
@@ -71,30 +70,64 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, selectedDate, Toast.LENGTH_SHORT).show(); // 날짜 띄우기
 
             listRefresh(db);
-
         }); // 날짜 선택 리스너
 
 
         // Add 버튼 설정
 
-        Button addButton = findViewById(R.id.addButton);
+        Button addButton = findViewById(R.id.addButton); // 버튼 연결
 
         addButton.setOnClickListener(v -> showInputDialog(new InputListener() {
             @Override
             public void onInputReceived(String userInput) {
                 listRefresh(db, userInput, selectedDate);
             }
-        }));
+        })); // 버튼 클릭시 리프레쉬까지
+
+
+        // Delete 버튼 설정
+
+        Button delButton = findViewById(R.id.deleteButton);
+
+        delButton.setOnClickListener(view -> {
+            ListView listView = findViewById(R.id.routineList);
+
+            CustomAdapter adapter = (CustomAdapter) listView.getAdapter();
+
+            // db 조회
+            String[] columns = {"id", "routine", "date"};
+            String[] args = {selectedDate};
+            Cursor cursor = db.query("routines", columns, "date = ?", args, null, null, null);
+
+            // 조회된 데이터가 있는지 확인
+            if (cursor != null && cursor.moveToFirst()) {
+                ArrayList<Item> array = new ArrayList<>(); // 데이터를 담을 리스트
+
+                do {
+                    String routineData = cursor.getString(cursor.getColumnIndex("routine"));
+                    Item routineItem = new Item(routineData);
+                    array.add(routineItem);
+                } while (cursor.moveToNext()); // 다음 행으로 이동
+
+                cursor.close(); // 커서 닫기
+
+                ArrayList<String> delete = new ArrayList<>();
+                for(Item temp: array) {
+                    if(temp.getChecked()) {
+                        delete.add(temp.getText());
+                    }
+                }
+            }
+        });
     }
 
-    private void listChange(List<String> array) {
+    private void listChange(List<Item> array) {
         // ListView 설정
 
         ListView listView = findViewById(R.id.routineList);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, array);
         // 어댑터 설정
-
+        CustomAdapter adapter = new CustomAdapter(this,array);
         listView.setAdapter(adapter); // 어댑터 연결
     }
 
@@ -141,11 +174,12 @@ public class MainActivity extends AppCompatActivity {
 
             // 조회된 데이터가 있는지 확인
             if (cursor != null && cursor.moveToFirst()) {
-                ArrayList<String> array = new ArrayList<>(); // 데이터를 담을 리스트
+                ArrayList<Item> array = new ArrayList<>(); // 데이터를 담을 리스트
 
                 do {
                     String routineData = cursor.getString(cursor.getColumnIndex("routine"));
-                    array.add(routineData);
+                    Item routineItem = new Item(routineData);
+                    array.add(routineItem);
                 } while (cursor.moveToNext()); // 다음 행으로 이동
 
                 cursor.close(); // 커서 닫기
@@ -153,8 +187,10 @@ public class MainActivity extends AppCompatActivity {
                 listChange(array); // ListView 갱신
             }
             else {
-                ArrayList<String> array = new ArrayList<>(); // 데이터를 담을 리스트
-                array.add("No Routine");
+                ArrayList<Item> array = new ArrayList<>(); // 데이터를 담을 리스트
+                Item routineItem = new Item("No Routine");
+                array.add(routineItem);
+                array.add(routineItem);
 
                 listChange(array);
             }
@@ -169,11 +205,12 @@ public class MainActivity extends AppCompatActivity {
 
         // 조회된 데이터가 있는지 확인
         if (cursor != null && cursor.moveToFirst()) {
-            ArrayList<String> array = new ArrayList<>(); // 데이터를 담을 리스트
+            ArrayList<Item> array = new ArrayList<>(); // 데이터를 담을 리스트
 
             do {
                 String routineData = cursor.getString(cursor.getColumnIndex("routine"));
-                array.add(routineData);
+                Item routineItem = new Item(routineData);
+                array.add(routineItem);
             } while (cursor.moveToNext()); // 다음 행으로 이동
 
             cursor.close(); // 커서 닫기
@@ -181,8 +218,9 @@ public class MainActivity extends AppCompatActivity {
             listChange(array); // ListView 갱신
         }
         else {
-            ArrayList<String> array = new ArrayList<>(); // 데이터를 담을 리스트
-            array.add("No Routine");
+            ArrayList<Item> array = new ArrayList<>(); // 데이터를 담을 리스트
+            Item routineItem = new Item("No routine");
+            array.add(routineItem);
 
             listChange(array);
         }
